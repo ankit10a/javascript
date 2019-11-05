@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" type="text/css" href="SectionC.css">
+	<meta charset="UTF-8">
+	<title>Section C</title>
+</head>
+<body>
+	<div class="btn">
+		<div><button onclick="newemp()">New Employee</button></div>
+		<div><button onclick="show()">All Employee</button></div>
+		<div><button onclick="fulldump()">Full Dump</button></div>
+		<div><button onclick="pdump()">Partial Dump</button></div>
+	</div>
+	<div id="filter" class="fil"></div>
+	<div id="head"></div> 
+	<div class="data" id="data"></div>
+	<div id="dmp"></div>
+</body>
+</html>
+<script type="text/javascript">
+var arr1 = [{empcode:'A102',name:'James',age:37,gender:'Male',department:'Finance',designation:'Manager',salary:5000},
+	{empcode:'A106',name:'Mary',age:24,gender:'Female',department:'Technology',designation:'VicePresident',salary:68000},
+	{empcode:'A122',name:'Bob',age:23,gender:'Male',department:'Marketing',designation:'Manager',salary:51000},
+	{empcode:'A088',name:'Julia',age:33,gender:'Female',department:'Finance',designation:'VicePresident',salary:70000},	
+	{empcode:'A055',name:'Steve',age:27,gender:'Male',department:'Technology',designation:'Manager',salary:53000},	
+	{empcode:'A208',name:'Katherine',age:29,gender:'Female',department:'Marketing',designation:'Manager',salary:61000},
+	{empcode:'A181',name:'Edwards',age:31,gender:'Male',department:'Finance',designation:'Trainee',	salary:49000},
+	{empcode:'A029',name:'Margaret',age:32,gender:'Female',department:'Technology',designation:'President',	salary:53000},
+	{empcode:'A029',name:'Bill',age:27,gender:'Male',department:'Operations',designation:'Manager',salary:58000}];
+
+var head = document.getElementById('head');
+var display = document.getElementById('data');
+var fil = document.getElementById('filter');
+var dmpdata = document.getElementById('dmp');
+
+function show(){
+	dmpdata.innerHTML ="";
+	showdata(arr1);
+}
+	
+function showdata(arr) {
+
+	var filter = "<select id= dep><option disabled selected>Choose Department</option><option>Finance</option><option>Technology</option><option>Marketing</option><option>Operations</option></select>";
+	
+	var filter1 = "<select id= desgn><option disabled selected>Choose Designation</option><option>Manager</option><option>President</option><option>VicePresident</option><option>Trainee</option></select>";
+	
+	fil.innerHTML = "Filter Employee by : "+filter +" "+filter1 +" "+"<button onclick=filt()>filter</button>";
+
+	var heading ='<div class=empcodehead onclick=emp() >Emp code</div><div class=namehead onclick=name()>Name</div><div class=empcodehead onclick=age()>Age</div><div class=empcodehead onclick=gender()>Gender</div><div class=namehead onclick=department()>Department</div><div class=namehead onclick=designation()>Designation</div><div class=namehead onclick=salary()>Salary</div>';
+	head.innerHTML = heading;
+	var disp = arr.map(n=>("<div class=empcode>"+n.empcode+"</div><div class=name>"+n.name+"</div><div class=empcode>"+n.age+"</div><div class=empcode>"+n.gender+"</div><div class=name>"+n.department+"</div><div class=name>"+n.designation+"</div><div class=name>"+n.salary+"</div><div class=name><button onclick=edit(this) value="+n.empcode+">Edit</button></div><br/>"));
+	display.innerHTML = disp.join('');
+}
+function newemp(){
+	head.innerHTML ="";
+	display.innerHTML ="";
+	fil.innerHTML = "";
+	dmpdata.innerHTML = "";
+	var add = "<label class=lbl>Employee Code</label><input type=text id=empcode></br><lable class=lbl>Name</lable><input type=text id=name /><br/><lable class=lbl>Age</lable><input type=text id=age /><br/><lable class=lbl>Gender</lable><input type=radio name=k id=mgen value=Male>Male <input type=radio name=k id=fgen value=Female >Female <br/> <lable class=lbl>Department</lable> <select id= dep><option disabled selected>Department</option><option>Finance</option><option>Technology</option><option>Marketing</option><option>Operations</option></select><br/><lable class=lbl>Designation</lable><select id= desgn><option disabled selected>Designation</option><option>Manager</option><option>President</option><option>VicePresident</option><option>Trainee</option></select><br/><lable class=lbl>Salary</lable><input type=text id=sal><br/><lable class=lbl></lable><button onclick=add() id=btnadd >Add New Employee</button>";
+	fil.innerHTML = add;
+}
+function add(){
+	let code = document.getElementById("empcode").value;
+	let nm = document.getElementById("name");
+	let age = document.getElementById('age');
+	let m = document.getElementById('mgen'); 
+	let f = document.getElementById('fgen');
+	if(m.checked){
+		var gender = m.value;
+	}
+	if(f.checked){
+		var gender = f.value;
+	}
+	let department = document.getElementById('dep').value;
+	let designation = document.getElementById('desgn').value;
+	let sal = document.getElementById('sal');
+	var flag = checkid(code)|| check(nm) || check (age)|| checkg(gender)|| chk(department)||ch(designation)||checks(sal);
+	console.log(flag);
+	
+	if(flag)
+	{
+		let nwele = {"empcode":code,"name":nm.value,"age":age.value,"gender":gender,"department":department,"designation":designation,"salary":sal.value};
+		arr1.push(nwele);
+		alert("Employee is add");
+		showdata(arr1);
+	}
+}
+function checkid(c){
+	if(!c.trim()){
+		alert("Enter the Employee Code");
+		return 0;
+		}
+	else if(c.trim()){
+		var k = arr1.find(n=>(n.empcode==c));
+		if(k){
+			alert("This Employee code is already present please enter another");
+			return 0;
+		}
+	}
+}
+function check(k){
+	var n = k.value;
+	if(!n.trim()){
+		alert("Please Enter " +k.id);
+		return 0;
+	}
+}
+function checks(k){
+	var n = k.value;
+	if(!n.trim()){
+		alert("Please Enter " +k.id);
+		return 0;
+	}
+	else
+		return 1;
+}
+function checkg(l){
+	if(!l){
+		alert("select Gender");
+		return 0;
+	}
+}
+function chk(m){
+	if(m=="Department"){
+		alert("Select Department");
+		return 0;
+	}
+}
+function ch(m){
+	if(m=="Designation"){
+		alert("Select Designation");
+		return 0;
+	}
+}
+
+function edit(ele){
+	newemp();
+	let button = document.getElementById('btnadd');
+	button.setAttribute("onclick","update()");
+	button.innerHTML = "Update";
+	let code = document.getElementById("empcode");
+	let nm = document.getElementById("name");
+	let age = document.getElementById('age');
+	let m = document.getElementById('mgen'); 
+	let f = document.getElementById('fgen');
+	let department = document.getElementById('dep');
+	let designation = document.getElementById('desgn');
+	let sal = document.getElementById('sal');
+	var data = arr1.find(n=>(ele.value==n.empcode));
+	code.value = data.empcode;
+	code.setAttribute("disabled",true);
+	nm.value = data.name;
+	age.value = data.age;
+	if(data.gender=="Male"){
+		m.checked = true;
+	}
+	else{
+		f.checked = true;
+	}
+	department.value = data.department;
+	designation.value = data.designation;
+	sal.value = data.salary;
+	}
+function update(){
+	let code = document.getElementById("empcode").value;
+	let nm = document.getElementById("name").value;
+	let age = document.getElementById('age').value;
+	let m = document.getElementById('mgen'); 
+	let f = document.getElementById('fgen');
+	if(m.checked){
+		var gender = m.value;
+	}
+	if(f.checked){
+		var gender = f.value;
+	}
+	let department = document.getElementById('dep').value;
+	let designation = document.getElementById('desgn').value;
+	let sal = document.getElementById('sal').value;
+	let index = arr1.findIndex(n=>(n.empcode==code));
+	let nwele = {"empcode":code,"name":nm,"age":age,"gender":gender,"department":department,"designation":designation,"salary":sal};
+ 	arr1.splice(index,1,nwele);
+ 	alert("update");
+ 	showdata(arr1);
+}
+function filt(){
+	var dep = document.getElementById('dep').value;
+	var des = document.getElementById('desgn').value;
+	
+	if(!(dep=="Choose Department") && !(des=="Choose Designation")){
+		let s1 = arr1.filter(n=>(n.department==dep));
+		let s2 = s1.filter(n=>(n.designation==des));
+		showdata(s2);
+	}
+	if(!(dep=="Choose Department") && (des=="Choose Designation")){
+		let s1 = arr1.filter(n=>(n.department==dep));
+		showdata(s1);
+	}
+	if((dep=="Choose Department") && !(des=="Choose Designation")){
+		let s2 = arr1.filter(n=>(n.designation==des));
+		showdata(s2);
+	}
+}
+function emp(){
+	arr1.sort(function(a,b){
+		if(a.empcode>b.empcode)
+			return 1;
+		if(a.empcode==b.empcode)
+			return 0;
+		if(a.empcode<b.empcode)
+			return -1;
+	});
+	showdata(arr1);
+}
+function name(){
+	arr1.sort(function(a,b){
+		if(a.name>b.name)
+			return 1;
+		if(a.name==b.name)
+			return 0;
+		if(a.name<b.name)
+			return -1;
+	});
+	showdata(arr1);
+}
+function age(){
+	arr1.sort(function(a,b){
+		if(a.age>b.age)
+			return 1;
+		if(a.age==b.age)
+			return 0;
+		if(a.age<b.age)
+			return -1;
+	});
+	showdata(arr1);
+}
+function gender(){
+	arr1.sort(function(a,b){
+		if(a.gender>b.gender)
+			return 1;
+		if(a.gender==b.gender)
+			return 0;
+		if(a.gender<b.gender)
+			return -1;
+	});
+	showdata(arr1);
+}
+function department(){
+	arr1.sort(function(a,b){
+		if(a.department>b.department)
+			return 1;
+		if(a.department==b.department)
+			return 0;
+		if(a.department<b.department)
+			return -1;
+	});
+	showdata(arr1);
+}
+function designation(){
+	arr1.sort(function(a,b){
+		if(a.designation>b.designation)
+			return 1;
+		if(a.designation==b.designation)
+			return 0;
+		if(a.designation<b.designation)
+			return -1;
+	});
+	showdata(arr1);
+}
+function salary(){
+	arr1.sort(function(a,b){
+		if(a.salary>b.salary)
+			return 1;
+		if(a.salary==b.salary)
+			return 0;
+		if(a.salary<b.salary)
+			return -1;
+	});
+	showdata(arr1);
+}
+
+function fulldump(){
+	head.innerHTML ="";
+	display.innerHTML ="";
+	fil.innerHTML = "";
+	dmpdata.innerHTML = "";
+	var fdmp = arr1.map(n=>(n.empcode+"::"+n.name+"::"+n.age+"::"+n.gender+"::"+n.department+"::"+n.designation+"::"+n.salary));
+	var dmpfr = document.createElement("textarea");
+	dmpfr.setAttribute("rows",fdmp.length);
+	dmpfr.setAttribute("cols",55);
+	dmpfr.setAttribute("class","dmp");
+	dmpfr.innerHTML = JSON.stringify(fdmp);
+	dmpdata.appendChild(dmpfr);
+}
+function pdump(){
+	head.innerHTML ="";
+	display.innerHTML ="";
+	fil.innerHTML ="";
+	dmpdata.innerHTML = "";
+	var fdmp = arr1.map(n=>("Code = "+n.empcode+", Name ="+n.name+", Age "+n.age));
+	var dmpfr = document.createElement("textarea");
+	dmpfr.setAttribute("rows",fdmp.length);
+	dmpfr.setAttribute("cols",55);
+	dmpfr.setAttribute("class","dmp");
+	dmpfr.innerHTML = JSON.stringify(fdmp);
+	dmpdata.appendChild(dmpfr);
+}
+</script>
